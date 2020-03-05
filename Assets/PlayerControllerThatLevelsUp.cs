@@ -101,18 +101,25 @@ public class PlayerControllerThatLevelsUp : MonoBehaviour
 
 
     //a function to make the player gain the ammount of Xp the you tell it. 
-    void GainXP(int xpToGain)
+    public void GiveXP(int xpToGain)
     {
         xp += xpToGain;
         Debug.Log("Gained " + xpToGain + " XP, Current Xp = " + xp + ", XP needed to reach next Level = " + xpForNextLevel);
     }
+    //Interface to get the level of the player.
+    public float GetLevel()
+    {
+        return level;
+    }
+
+        
+
+
+
     
 
     void Update()
     {
-        //Test the GainXp function by pressing the x button. 
-        if (Input.GetKeyDown(KeyCode.X) == true) { GainXP(1); }
-
        
         //LevelUp when the appropriate conditions are met.
         if (xp >= xpForNextLevel)
@@ -140,5 +147,17 @@ public class PlayerControllerThatLevelsUp : MonoBehaviour
         {
             playerRB.velocity += (Vector3.up * currentJumpHeight);
         }
-		}
+
+        //Door Interaction
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+        RaycastHit hit;
+        int layermask = 1 << 8;
+        if(Physics.Raycast(transform.position, Vector3.forward,out hit, 2f, layermask))
+            {
+                hit.collider.gameObject.GetComponent<DoorHandler>().CheckUnlock(level);
+            }
+         }
+           
+    }
 }
